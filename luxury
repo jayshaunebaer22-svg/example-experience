@@ -1,0 +1,244 @@
+{% comment %}
+  LUXURY LANDING PAGE THEME
+  Inspired by Louis Vuitton, Chrome Hearts, StockX
+  Author: ChatGPT
+  Use: Upload to Shopify > Edit Code > Templates > Add New Template (page)
+{% endcomment %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ shop.name }} – The Drop Has Landed</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <style>
+    body {
+      margin: 0;
+      background-color: #0e0e0e;
+      color: #f5f5f5;
+      font-family: 'Montserrat', sans-serif;
+      overflow-x: hidden;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 3rem;
+      z-index: 1000;
+    }
+
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      color: #e0c17c;
+      letter-spacing: 2px;
+      font-size: 1.5rem;
+    }
+
+    header nav a {
+      color: #f5f5f5;
+      text-decoration: none;
+      margin-left: 2rem;
+      text-transform: uppercase;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    .hero {
+      height: 100vh;
+      background: url('{{ 'luxury-hero.jpg' | asset_url }}') center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+      position: relative;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      letter-spacing: 1px;
+    }
+
+    .hero button {
+      background: #e0c17c;
+      border: none;
+      padding: 1rem 2rem;
+      color: black;
+      font-weight: bold;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: 0.3s;
+      border-radius: 2px;
+    }
+
+    .hero button:hover {
+      background: #fff;
+    }
+
+    .products {
+      padding: 6rem 3rem;
+      background: #111;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .product-card {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 10px;
+      overflow: hidden;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .product-card img {
+      width: 100%;
+      height: 320px;
+      object-fit: cover;
+    }
+
+    .product-card h3 {
+      font-family: 'Playfair Display', serif;
+      color: #e0c17c;
+      margin: 1rem 0 0.3rem;
+    }
+
+    .product-card .price {
+      color: #ccc;
+      margin-bottom: 1rem;
+    }
+
+    .product-card form button {
+      background: transparent;
+      border: 1px solid #e0c17c;
+      color: #e0c17c;
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-bottom: 1.5rem;
+    }
+
+    .product-card form button:hover {
+      background: #e0c17c;
+      color: #000;
+    }
+
+    .about {
+      text-align: center;
+      padding: 5rem 2rem;
+      background: #0e0e0e;
+    }
+
+    .about h2 {
+      font-family: 'Playfair Display', serif;
+      color: #e0c17c;
+      margin-bottom: 1rem;
+    }
+
+    .about p {
+      max-width: 700px;
+      margin: auto;
+      color: #ccc;
+      line-height: 1.8;
+    }
+
+    footer {
+      background: #000;
+      color: #999;
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.9rem;
+    }
+
+    @media(max-width: 768px) {
+      header {
+        flex-direction: column;
+      }
+      .hero h2 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <h1>{{ shop.name }}</h1>
+    <nav>
+      <a href="#shop">Shop</a>
+      <a href="#about">About</a>
+      <a href="/cart">Cart ({{ cart.item_count }})</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <h2>The Drop Has Landed</h2>
+      <button onclick="window.location.href='/collections/all'">Shop Now</button>
+    </div>
+  </section>
+
+  <!-- PRODUCTS -->
+  <section id="shop" class="products">
+    {% for product in collections.frontpage.products %}
+      <div class="product-card">
+        <a href="{{ product.url }}">
+          <img src="{{ product.featured_image | img_url: '800x' }}" alt="{{ product.title }}">
+        </a>
+        <h3>{{ product.title }}</h3>
+        <p class="price">{{ product.price | money }}</p>
+        <form method="post" action="/cart/add">
+          <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+          <button type="submit">Add to Cart</button>
+        </form>
+      </div>
+    {% endfor %}
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="about">
+    <h2>Crafted for the Few</h2>
+    <p>Each collection is meticulously designed with premium materials and modern craftsmanship — combining heritage luxury with street culture energy. 
+    Our pieces are made for collectors, not consumers.</p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    © {{ 'now' | date: "%Y" }} {{ shop.name }}. All Rights Reserved.
+  </footer>
+
+</body>
+</html>
